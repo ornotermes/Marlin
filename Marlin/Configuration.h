@@ -8,7 +8,7 @@
 // Huxley: http://reprap.org/wiki/RepRapPro_Huxley_maintenance
 
 // Uncomment ONE of the next three lines - the one for your RepRap machine
-//#define REPRAPPRO_HUXLEY
+#define REPRAPPRO_HUXLEY
 //#define REPRAPPRO_MENDEL //Legacy Mendel
 //#define REPRAPPRO_MENDEL2 //Tricolour and Mono
 
@@ -22,6 +22,38 @@
 
 // Uncomment the next line if your machine has more than one extruder
 //#define REPRAPPRO_MULTIMATERIALS
+
+#define ULTIPANEL
+#ifdef ULTIPANEL
+  #define BEEPER -1
+  #define NEWPANEL  //enable this if you have a click-encoder panel
+  
+  #define BTN_EN1 10
+  #define BTN_EN2 11
+  #define BTN_ENC 28
+  
+  #define SDCARDDETECT -1
+  
+  #define BLEN_C 2
+  #define BLEN_B 1
+  #define BLEN_A 0
+  
+  #define SDSUPPORT
+  #define ULTRA_LCD
+  #define I2C_LCD
+  #define I2C_LCD_ADDR 0x27
+  #define LCD_WIDTH 20
+  #define LCD_HEIGHT 4
+
+// Preheat Constants
+  #define PLA_PREHEAT_HOTEND_TEMP 180 
+  #define PLA_PREHEAT_HPB_TEMP 70
+  #define PLA_PREHEAT_FAN_SPEED 255		// Insert Value between 0 and 255
+
+  #define ABS_PREHEAT_HOTEND_TEMP 240
+  #define ABS_PREHEAT_HPB_TEMP 100
+  #define ABS_PREHEAT_FAN_SPEED 255		// Insert Value between 0 and 255
+#endif
 
 // -------------------------------------------------------------------------------
 

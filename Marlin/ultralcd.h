@@ -2,17 +2,27 @@
 #define ULTRALCD_H
 #include "Marlin.h"
 #ifdef ULTRA_LCD
-  #include <LiquidCrystal.h>
+  #ifdef I2C_LCD
+	#include <LiquidCrystal_I2C.h>
+  #else
+	#include <LiquidCrystal.h>
+  #endif
   void lcd_status();
   void lcd_init();
   void lcd_status(const char* message);
   void beep();
   void buttons_init();
+  void buttons_isr();
   void buttons_check();
 
   #define LCD_UPDATE_INTERVAL 100
   #define STATUSTIMEOUT 15000
-  extern LiquidCrystal lcd;
+  
+  #ifdef I2C_LCD
+  	extern LiquidCrystal_I2C lcd;
+  #else
+  	extern LiquidCrystal lcd;
+  #endif
   extern volatile char buttons;  //the last checked buttons in a bit array.
   
   #ifdef NEWPANEL
@@ -49,7 +59,7 @@
     
   // blocking time for recognizing a new keypress of one key, ms
   #define blocktime 500
-  #define lcdslow 5
+  #define lcdslow 1
     
   enum MainStatus{Main_Status, Main_Menu, Main_Prepare,Sub_PrepareMove, Main_Control, Main_SD,Sub_TempControl,Sub_MotionControl,Sub_RetractControl};
 

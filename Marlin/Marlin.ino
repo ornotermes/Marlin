@@ -37,6 +37,7 @@
 
 #include "Marlin.h"
 
+#include <Wire.h>
 #include "ultralcd.h"
 #include "led.h"
 #include "z_probe.h"
@@ -362,6 +363,8 @@ void setup()
   probe_init(); //Initializes probe if PROBE_PIN is defined
   FPUTransform_init(); //Initializes FPU when UMFPUSUPPORT defined
   setup_photpin();
+  
+  lcd_init();
   
 #ifdef REPRAPPRO_MULTIMATERIALS
   setup_slave();

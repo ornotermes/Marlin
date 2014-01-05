@@ -44,7 +44,7 @@
 #define HEATER_2_PIN       -1
 
 #ifdef REPRAPPRO_HUXLEY
-  #define HEATER_BED_PIN     10 // bed (change to 10 for gate pin of MOSFET on heated bed)
+  #define HEATER_BED_PIN     30 // bed (change to 10 for gate pin of MOSFET on heated bed)
 #else
   #define HEATER_BED_PIN     12
 #endif
@@ -105,10 +105,12 @@
 #define HEATER_0_PIN       13 // (extruder)
 #define HEATER_1_PIN       -1
 #define HEATER_2_PIN       -1
-#ifdef REPRAPPRO_HUXLEY
-  #define HEATER_BED_PIN     10 // bed (change to 10 for gate pin of MOSFET on heated bed)
-#else
-  #define HEATER_BED_PIN     12
+#ifndef HEATER_BED_PIN
+	#ifdef REPRAPPRO_HUXLEY
+	  #define HEATER_BED_PIN     30 // bed (change to 10 for gate pin of MOSFET on heated bed)
+	#else
+	  #define HEATER_BED_PIN     12
+	#endif
 #endif
 #define X_ENABLE_PIN       14
 #define Y_ENABLE_PIN       14

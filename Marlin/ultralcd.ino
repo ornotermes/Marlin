@@ -6,7 +6,12 @@
 #include "language.h"
 #include "temperature.h"
 #include "EEPROMwrite.h"
-#include <LiquidCrystal.h>
+
+#ifdef I2C_LCD
+	#include <LiquidCrystal_I2C.h>
+#else
+	#include <LiquidCrystal.h>
+#endif
 //===========================================================================
 //=============================imported variables============================
 //===========================================================================
@@ -38,7 +43,11 @@ static char messagetext[LCD_WIDTH]="";
 //return for string conversion routines
 static char conv[8];
 
-LiquidCrystal lcd(LCD_PINS_RS, LCD_PINS_ENABLE, LCD_PINS_D4, LCD_PINS_D5,LCD_PINS_D6,LCD_PINS_D7);  //RS,Enable,D4,D5,D6,D7 
+#ifdef I2C_LCD
+	LiquidCrystal_I2C lcd(I2C_LCD_ADDR, LCD_WIDTH, LCD_HEIGHT);
+#else
+	LiquidCrystal lcd(LCD_PINS_RS, LCD_PINS_ENABLE, LCD_PINS_D4, LCD_PINS_D5,LCD_PINS_D6,LCD_PINS_D7);  //RS,Enable,D4,D5,D6,D7 
+#endif
 
 static unsigned long previous_millis_lcd=0;
 //static long previous_millis_buttons=0;
@@ -130,7 +139,14 @@ void lcd_init()
   byte uplevel[8]={0x04, 0x0e, 0x1f, 0x04, 0x1c, 0x00, 0x00, 0x00};//thanks joris
   byte refresh[8]={0x00, 0x06, 0x19, 0x18, 0x03, 0x13, 0x0c, 0x00}; //thanks joris
   byte folder [8]={0x00, 0x1c, 0x1f, 0x11, 0x11, 0x1f, 0x00, 0x00}; //thanks joris
-  lcd.begin(LCD_WIDTH, LCD_HEIGHT);
+  #ifdef I2C_LCD
+  	lcd.init();
+  	;;;;
+  	lcd.init();
+  	lcd.backlight();
+  #else
+  	lcd.begin(LCD_WIDTH, LCD_HEIGHT);
+  #endif
   lcd.createChar(1,Degree);
   lcd.createChar(2,Thermometer);
   lcd.createChar(3,uplevel);
@@ -215,12 +231,15 @@ void buttons_init()
     pinMode(BTN_EN1,INPUT);
     pinMode(BTN_EN2,INPUT); 
     pinMode(BTN_ENC,INPUT); 
-    pinMode(SDCARDDETECT,INPUT);
+    
     WRITE(BTN_EN1,HIGH);
     WRITE(BTN_EN2,HIGH);
     WRITE(BTN_ENC,HIGH);
+    
+    attachInterrupt(1, buttons_isr, FALLING);
     #if (SDCARDDETECT > -1)
     {
+      pinMode(SDCARDDETECT,INPUT);
       WRITE(SDCARDDETECT,HIGH);
     }
     #endif
@@ -235,10 +254,16 @@ void buttons_init()
   #endif
 }
 
+void buttons_isr()
+{
+if(READ(BTN_EN1)==0)
+  encoderpos--;
+else
+  encoderpos++;
+}
 
 void buttons_check()
 {
-  
   #ifdef NEWPANEL
     uint8_t newbutton=0;
     if(READ(BTN_EN1)==0)  newbutton|=EN_A;
@@ -262,7 +287,8 @@ void buttons_check()
     buttons=~newbutton; //invert it, because a pressed switch produces a logical 0
   #endif
   
-  //manage encoder rotation
+  //manage encoder rotation    
+  /*
   char enc=0;
   if(buttons&EN_A)
     enc|=(1<<0);
@@ -272,28 +298,28 @@ void buttons_check()
 	{
     switch(enc)
     {
-    case encrot0:
-      if(lastenc==encrot3)
+    case 0:
+      if(lastenc==3)
         encoderpos++;
-      else if(lastenc==encrot1)
+      else if(lastenc==1)
         encoderpos--;
       break;
-    case encrot1:
-      if(lastenc==encrot0)
+    case 1:
+      if(lastenc==0)
         encoderpos++;
-      else if(lastenc==encrot2)
+      else if(lastenc==2)
         encoderpos--;
       break;
-    case encrot2:
-      if(lastenc==encrot1)
+    case 2:
+      if(lastenc==1)
         encoderpos++;
-      else if(lastenc==encrot3)
+      else if(lastenc==3)
         encoderpos--;
       break;
-    case encrot3:
-      if(lastenc==encrot2)
+    case 3:
+      if(lastenc==2)
         encoderpos++;
-      else if(lastenc==encrot0)
+      else if(lastenc==0)
         encoderpos--;
       break;
     default:
@@ -301,6 +327,7 @@ void buttons_check()
     }
   }
   lastenc=enc;
+  */
 }
 
 #endif
