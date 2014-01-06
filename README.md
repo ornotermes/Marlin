@@ -1,0 +1,12 @@
+This is a modified version of Marlin for RepRapPro printers.
+The goal is to add basic support for I2C-displays and rotary encoders.
+
+Tested on these printers so far:
+RepRapPro Huxley with Melzi (Ornotermes)
+
+Tested with the following hardware:
+http://dx.com/p/5v-iic-i2c-3-1-blue-screen-lcd-display-module-for-arduino-green-black-232993 (Ornotermes, note: The display is connected in a odd way, the high bits and low bits are reversed.
+http://dx.com/p/176924 (Ornotermes)
+
+You need a LiquidCrystal_I2C-library in your Arduino IDE that works with your display.
+For HD44780 over PCF8574: http://hmario.home.xs4all.nl/arduino/LiquidCrystal_I2C/
